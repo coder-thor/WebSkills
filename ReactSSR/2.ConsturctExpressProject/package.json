@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "scripts": {
+    "dev:start": "nodemon --watch src --exec node src/server"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
