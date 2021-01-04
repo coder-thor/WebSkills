@@ -2,7 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/server'
 import App from './App'
 
-export default (req, res) => {
+import { getAllJsFiles } from './utils'
+
+export default async (req, res) => {
+  const scripts = await getAllJsFiles();
   const homeComp = ReactDOM.renderToString(<App />);
   console.log("homeComp", homeComp);
   const html = `<!DOCTYPE html>
@@ -13,7 +16,8 @@ export default (req, res) => {
       <title>Document</title>
     </head>
     <body>
-      <div id="#root">HelloSSR1111</div>
+      <div id="#root">${homeComp}</div>
+      ${ scripts }
     </body>
     </html>`;
 

@@ -74,3 +74,50 @@
   ```
 
 6. 渲染页面组件的内容到id为```root```的div中
+
+### 在浏览器端渲染组件
+
+基于上方的代码, 我们在Home组件中绑定点击事件, 会发现当页面响应给浏览器以后, 我们绑定的事件直接失效了
+
+```js
+import React, { useState } from 'react'
+
+export default function Home(props) {
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <p>Hello, React Component</p>
+      <button onClick={ () => setCount(count + 1) }>Click, current Value: { count }</button>
+    </div>
+  )
+}
+```
+
+究其根本的原因是因为React注册事件是注册在document身上的, 而在服务器端我们并没有document, 所以肯定会导致事件绑定不成功, 所以我们真正的服务端渲染流程倒是应该像下面这样
+
+![](./assets/SSR客户端渲染.png)
+
+同构: 为了保证浏览器能够正常执行和解析JS, 我们应当重写一份client的代码并使用webpack打包, 而重写的client代码应当保持和服务器端代码一致, 我们称之为**同构**
+
+1. 书写客户端启动文件
+2. 使用```webpack```打包**客户端code**到```public```目录中
+    生成webpack.server.js 和 webpack.client.js来进行区分环境处理
+3. 在服务器输出的html文件中引入js
+4. 重新配置```package.json```
+    ```json
+    "scripts": {
+      "dev": "npm-run-all --parallel dev:**",
+      "dev:start": "nodemon --watch dist --exec node dist/server",
+      "dev:build:server": "webpack --config webpack.server.js",
+      "dev:build:client": "webpack --config webpack.client.js"
+    },
+    ```
+
+
+为什么要使用hydrate注水来代替render, 因为服务端已经将页面渲染好了, 只是事件什么的没有添加上, 所以如果我们还要使用render, 那其实造成了多余的消耗, 得不偿失, 而hydrate注水你可以理解为他并不会使用render重新渲染界面, 而是在虚拟dom中给所有的Element绑定事件
+
+至此, 我们的文件夹分为了三块
+
+- client: 客户端代码
+- pages: 通用组件代码
+- server: 服务端代码
