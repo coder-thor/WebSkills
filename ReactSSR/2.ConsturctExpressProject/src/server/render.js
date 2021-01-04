@@ -1,12 +1,10 @@
-const express = require("express")
+import React from 'react'
+import ReactDOM from 'react-dom/server'
+import App from './App'
 
-const app = express();
-
-app.listen(9000, () => {
-  console.log("start server");
-});
-
-app.get("*", (req, res) => {
+export default (req, res) => {
+  const homeComp = ReactDOM.renderToString(<App />);
+  console.log("homeComp", homeComp);
   const html = `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -15,9 +13,9 @@ app.get("*", (req, res) => {
       <title>Document</title>
     </head>
     <body>
-      <div id="#root">HelloSSR1</div>
+      <div id="#root">HelloSSR1111</div>
     </body>
     </html>`;
 
   res.send(html);
-})
+}
