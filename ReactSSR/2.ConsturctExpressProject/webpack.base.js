@@ -3,6 +3,7 @@ const path = require("path")
 
 module.exports = {
   watch: true, // 开启监控
+  mode: "development",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src") // 设置别名, 使用@来替代src目录

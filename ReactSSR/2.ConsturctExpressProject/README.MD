@@ -121,3 +121,22 @@ export default function Home(props) {
 - client: 客户端代码
 - pages: 通用组件代码
 - server: 服务端代码
+
+
+### 处理样式
+
+我们需要安装两个插件:
+
+```
+yarn add mini-css-extract-plugin css-loader ismorphic-style-loader -D
+<!-- ismorphic-style-loader 用来保证服务端和客户端样式的同构 -->
+```
+
+1. 利用webpack生成样式文件
+2. 在页面源代码中加入一个link元素, 链接到样式文件
+
+> 所书写的css文件倒是需要在client和server中都要引入, 因为我们要保证同构效果, 但是他们有一些小区别
+
+- 客户端需要有完整的样式依赖, 经过```mini-css-extract-plugin```进行打包, 生成样式文件
+- 服务端可以不生成样式文件, 但是最终的源代码中的样式必须和客户端的样式一致
+- 服务端需要在页面源代码中引入一个link元素, 链接到样式文件
